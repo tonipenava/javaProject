@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}" lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Uređivanje automobila</title>
+</head>
+<body layout:fragment="content">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4>Uređivanje automobila</h4>
+            <form th:object="${car}" th:action="@{/car/edit/{id}(id=${car.getId()})}" method="POST" enctype="multipart/form-data">
+                <label class="col-form-label">Unesite naziv automobila:</label>
+                <input class="form-control" th:classappend="${#fields.hasErrors('name') ? 'is-invalid' : ''}" type="text" th:field="*{name}">
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></div>
+
+                <label class="col-form-label">Unesite opis automobila:</label>
+                <input class="form-control" th:classappend="${#fields.hasErrors('description') ? 'is-invalid' : ''}" type="text" th:field="*{description}">
+                <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="invalid-feedback"></div>
+
+                <label class="col-form-label">Unesite cijenu automobila:</label>
+                <input class="form-control" th:classappend="${#fields.hasErrors('price') ? 'is-invalid' : ''}" type="number" th:field="*{price}" step=".05">
+                <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback"></div>
+
+                <label class="col-form-label">Unesite količinu automobila:</label>
+                <input class="form-control" th:classappend="${#fields.hasErrors('unit') ? 'is-invalid' : ''}" type="text" th:field="*{unit}">
+                <div th:if="${#fields.hasErrors('unit')}" th:errors="*{unit}" class="invalid-feedback"></div>
+
+                <label class="col-form-label">Odaberite sliku automobila:</label>
+                <input class="form-control" th:classappend="${#fields.hasErrors('image') ? 'is-invalid' : ''}" type="file" name="file">
+                <div th:if="${#fields.hasErrors('image')}" th:errors="*{image}" class="invalid-feedback"></div>
+
+                <label class="col-form-label">Odaberite kategoriju automobila</label>
+                <select class="form-control" th:classappend="${#fields.hasErrors('category') ? 'is-invalid' : ''}"  th:field="*{category}">
+                    <option value="">Odaberite kategoriju</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+                <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="invalid-feedback"></div>
+
+                <button type="submit" class="btn btn-primary mt-3">Uredi automobil</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

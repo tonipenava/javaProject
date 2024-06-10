@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}" lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Prikaz svih marka vozila</title>
+</head>
+<body layout:fragment="content">
+<div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+        <h1>Sve kategorije</h1>
+        <button data-toggle="tooltip" data-placement="top" title="Dodaj kategoriju" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory"><i class="fa-solid fa-plus"></i></button>
+    </div>
+</div>
+<table class="table table-striped table-bordered">
+    <tr>
+        <td style="width: 10%">ID</td>
+        <td>Naziv</td>
+        <td>Nadkategorija</td>
+        <td style="width: 10%">Akcije</td>
+    </tr>
+    <tr th:each="category: ${categories}">
+        <td th:text="${category.getId()}"></td>
+        <td th:text="${category.getName()}"></td>
+        <td th:if="${category.getParent()}" th:text="${category.getParent().getName()}"></td>
+        <td th:if="${category.getParent() == null}"></td>
+        <td class="d-flex align-items-center justify-content-center">
+            <div class="btn-group" role="group">
+                <a data-toggle="tooltip" data-placement="top" title="Briši kategoriju" class="btn btn-sm btn-danger" th:href="@{/category/delete/{id}(id=${category.getId()})}"><i class="fa-solid fa-eraser"></i></a>
+                <a data-toggle="tooltip" data-placement="top" title="Uredi kategoriju" class="btn btn-sm btn-secondary" th:href="@{/category/edit/{id}(id=${category.getId()})}"><i class="fa-solid fa-pen-to-square"></i></a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<div class="modal fade" id="addCategory">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nova kategorija</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:object="${category}" th:action="@{/category/add}" method="POST">
+                <div class="modal-body">
+                    <label class="col-form-label">Unesite naziv kategorije:</label>
+                    <input class="form-control" th:classappend="${#fields.hasErrors('name') ? 'is-invalid' : ''}" type="text" th:field="*{name}">
+                    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></div>
+
+                    <label class="col-form-label">Odaberite nadkategoriju</label>
+                    <select class="form-control" th:field="*{parent}">
+                        <option value="">Odaberite kategoriju</option>
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                    </select>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+                    <button type="submit" class="btn btn-primary">Dodaj kategoriju</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+<script type="text/javascript" th:if="${added}">
+    $(function () {
+        $('#addCategory').modal("show");
+    })
+</script>
+</body>
+</html>
